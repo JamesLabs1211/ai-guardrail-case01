@@ -24,10 +24,13 @@ sudo chown -R $USER:$USER /opt/chatapp
 cd /opt/chatapp
 
 git clone https://github.com/JamesLabs1211/ai-guardrail-case01.git .
-chmod +x install.sh run.sh
+chmod +x install.sh run.sh stop.sh
 
 ./install.sh
-nano .env
+vim .env
 ./run.sh
+
+# If you want to stop the service
+./stop.sh
 ```
 
