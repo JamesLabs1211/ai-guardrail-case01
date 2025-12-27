@@ -27,7 +27,19 @@ LLM Runtime (Ollama /api/chat)
    - F5 AI Guardrail SaaS (outbound HTTPS)
 - LLM runtime (e.g., Ollama) reachable by F5 AI Guardrail
 
-## 3. Prepare the Environment Script
+## 3. Proceed the Installation
+```
+sudo mkdir -p /opt/chatapp
+sudo chown -R $USER:$USER /opt/chatapp
+cd /opt/chatapp
+
+git clone https://github.com/JamesLabs1211/ai-guardrail-case01.git .
+chmod +x install.sh run.sh stop.sh
+sudo apt install python3.12-venv
+
+./install.sh
+
+## 4. Prepare the Environment Script
 - Update the env.example file with your own values (provider name, API token, Calypso URL, and project ID).
 - Refer to the configuration guide for instructions on how to obtain the required values from the F5 AI Guardrail portal.
 ```
@@ -40,21 +52,15 @@ CALYPSOAI_TOKEN="<your-ai-guardrail-api-token>"
 CALYPSOAI_URL="<your-ai-guardrail-url>"
 CALYPSOAI_PROJECT_ID="<your-guardrail-project-id>"
 ```
-## 4. Proceed the Installation
-```
-sudo mkdir -p /opt/chatapp
-sudo chown -R $USER:$USER /opt/chatapp
-cd /opt/chatapp
-
-git clone https://github.com/JamesLabs1211/ai-guardrail-case01.git .
-chmod +x install.sh run.sh stop.sh
-sudo apt install python3.12-venv
-
-./install.sh
+# replace the environmental values here with your own values
 vim .env
+```
+
+## 5. Start the Service
+```
 ./run.sh
 
-# If you want to stop the service
+# Stop the service
 ./stop.sh
 ```
 
