@@ -48,6 +48,7 @@ cd /opt/chatapp
 
 git clone https://github.com/JamesLabs1211/ai-guardrail-case01.git .
 chmod +x install.sh run.sh stop.sh
+sudo apt install python3.12-venv
 
 ./install.sh
 vim .env
