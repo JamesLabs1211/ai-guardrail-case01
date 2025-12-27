@@ -4,7 +4,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from calypsoai import CalypsoAI
 
-CALYPSOAI_URL = os.getenv("CALYPSOAI_URL", "<ai-guardrail-url>")
+CALYPSOAI_URL = os.getenv("CALYPSOAI_URL")
 CALYPSOAI_TOKEN = os.getenv("CALYPSOAI_TOKEN")
 CALYPSOAI_PROJECT_ID = os.getenv("CALYPSOAI_PROJECT_ID")  
 DEFAULT_PROVIDER = os.getenv("DEFAULT_PROVIDER")  
