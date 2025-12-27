@@ -21,6 +21,8 @@ LLM Runtime (Ollama /api/chat)
 
 ## 2. System Requirements
 - OS: Ubuntu 24.04+ (tested)
+- 4 x vCPU +
+- 8GB Memory +
 - Python: 3.10+
 - Network access to:
    - Guardrail Gateway (local)
