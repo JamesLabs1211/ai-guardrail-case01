@@ -43,7 +43,7 @@ sudo apt install python3.12-venv
 ```
 
 ## 4. Prepare the Environment Script
-- Update the env.example file with your own values (provider name, API token, Calypso URL, and project ID).
+- Update the .env values with your own values (provider name, API token, Calypso URL, and project ID).
 - Refer to the configuration guide for instructions on how to obtain the required values from the F5 AI Guardrail portal.
 ```
 # Frontend -> Proxy
