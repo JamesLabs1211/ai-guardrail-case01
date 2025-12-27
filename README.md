@@ -20,12 +20,12 @@ LLM Runtime (Ollama /api/chat)
 ```
 
 ## 2. System Requirements
-- OS: Ubuntu 22.04+ (tested)
+- OS: Ubuntu 24.04+ (tested)
 - Python: 3.10+
 - Network access to:
    - Guardrail Gateway (local)
-   - F5 Calypso AI Guardrail (outbound HTTPS)
-- LLM runtime (e.g., Ollama) reachable by Calypso AI
+   - F5 AI Guardrail SaaS (outbound HTTPS)
+- LLM runtime (e.g., Ollama) reachable by F5 AI Guardrail
 
 ## 3. Prepare the Environment Script
 - Update the env.example file with your own values (provider name, API token, Calypso URL, and project ID).
