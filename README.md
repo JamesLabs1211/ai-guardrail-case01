@@ -4,7 +4,30 @@
 - In this setup, BIG-IP is used to strictly limit the model’s generated responses, keeping them short and concise to ensure fast response times.
 - Although response length can be controlled by an LLM orchestration application, leveraging BIG-IP in this scenario provides added flexibility and enables additional use cases in future architectures.
 
-## 1. Prepare the Environment Script
+## 1. Architecture Overview
+```
+Browser (UI)
+   ↓
+Flask Frontend App (/api/chat)
+   ↓
+Python Guardrail Gateway (/v1/chat/completions)
+   ↓
+F5 Calypso AI Guardrail (SaaS)
+   ↓
+F5 BIG-IP (Enforce System prompt)
+   ↓
+LLM Runtime (Ollama /api/chat)
+```
+
+## 2. System Requirements
+- OS: Ubuntu 22.04+ (tested)
+- Python: 3.10+
+- Network access to:
+   - Guardrail Gateway (local)
+   - F5 Calypso AI Guardrail (outbound HTTPS)
+- LLM runtime (e.g., Ollama) reachable by Calypso AI
+
+## 3. Prepare the Environment Script
 - Update the env.example file with your own values (provider name, API token, Calypso URL, and project ID).
 - Refer to the configuration guide for instructions on how to obtain the required values from the F5 AI Guardrail portal.
 ```
@@ -17,7 +40,7 @@ CALYPSOAI_TOKEN="<your-ai-guardrail-api-token>"
 CALYPSOAI_URL="<your-ai-guardrail-url>"
 CALYPSOAI_PROJECT_ID="<your-guardrail-project-id>"
 ```
-## 2. Proceed the Installation
+## 4. Proceed the Installation
 ```
 sudo mkdir -p /opt/chatapp
 sudo chown -R $USER:$USER /opt/chatapp
