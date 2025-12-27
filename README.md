@@ -38,6 +38,7 @@ chmod +x install.sh run.sh stop.sh
 sudo apt install python3.12-venv
 
 ./install.sh
+```
 
 ## 4. Prepare the Environment Script
 - Update the env.example file with your own values (provider name, API token, Calypso URL, and project ID).
@@ -51,6 +52,8 @@ DEFAULT_PROVIDER="<<YOUR PROVIDER NAME in F5 AI Guardrail Portal>>"
 CALYPSOAI_TOKEN="<your-ai-guardrail-api-token>"
 CALYPSOAI_URL="<your-ai-guardrail-url>"
 CALYPSOAI_PROJECT_ID="<your-guardrail-project-id>"
+```
+
 ```
 # replace the environmental values here with your own values
 vim .env
