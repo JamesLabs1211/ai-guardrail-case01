@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>F5 AI Guardrail Lab</title>
+  <style>
+    :root{
+      --brand:#2f5be7;
+      --bg:#f5f7fb;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --border:#e5e7eb;
+      --shadow:0 10px 30px rgba(15,23,42,.08);
+      --radius:18px;
+      --sidebar:#ffffff;
+      --sidebarHover:#f3f6ff;
+      --sidebarActive:#e9efff;
+
+      /* Rejection styling */
+      --danger:#dc2626;
+      --dangerBg:#fff5f5;
+      --dangerBorder:#fecaca;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      min-height:100vh;
+    }
+    .topbar{
+      background:var(--brand);
+      color:#fff;
+      padding:14px 18px;
+      font-weight:700;
+      letter-spacing:.2px;
+    }
+    .wrap{
+      max-width:1200px;
+      margin:18px auto;
+      padding:0 14px;
+    }
+    .layout{
+      display:grid;
+      grid-template-columns: 260px 1fr;
+      gap:16px;
+      align-items:start;
+    }
+    .sidebar{
+      background:var(--sidebar);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .sidebarHeader{
+      padding:14px 16px;
+      border-bottom:1px solid var(--border);
+      font-weight:700;
+    }
+    .nav{
+      padding:10px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .navBtn{
+      width:100%;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid transparent;
+      background:transparent;
+      cursor:pointer;
+      font-size:14px;
+      color:var(--text);
+      text-align:left;
+    }
+    .navBtn:hover{ background:var(--sidebarHover); }
+    .navBtn.active{
+      background:var(--sidebarActive);
+      border-color:#dbe4ff;
+      color:#1e40af;
+      font-weight:700;
+    }
+
+    .crumb{
+      color:var(--muted);
+      font-size:13px;
+      margin:6px 2px 12px;
+    }
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .cardHeader{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:14px 16px;
+      border-bottom:1px solid var(--border);
+    }
+    .titleRow{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .dot{
+      width:14px;height:14px;border-radius:6px;
+      background:linear-gradient(135deg,#ff4d6d,#6d28d9);
+    }
+    .title{
+      font-size:19px;
+      font-weight:800;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .badge{
+      font-size:12px;
+      padding:2px 8px;
+      border-radius:999px;
+      background:#eef2ff;
+      color:#3730a3;
+      border:1px solid #e0e7ff;
+      font-weight:700;
+    }
+    .sub{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:2px;
+    }
+    .toolbar button{
+      border:1px solid var(--border);
+      background:#fff;
+      border-radius:12px;
+      padding:8px 10px;
+      cursor:pointer;
+      font-size:13px;
+    }
+
+    .chat{
+      height: calc(100vh - 220px);
+      min-height: 620px;
+      display:flex;
+      flex-direction:column;
+    }
+    .messages{
+      flex:1;
+      min-height: 460px;
+      padding:16px;
+      overflow:auto;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(47,91,231,.12), transparent 55%),
+        radial-gradient(circle at 100% 0%, rgba(147,197,253,.22), transparent 45%),
+        #fbfcff;
+    }
+
+    .bubble{
+      max-width:78%;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:#fff;
+      margin:8px 0;
+      white-space:pre-wrap;
+      line-height:1.45;
+      font-size:17px;
+      box-shadow:0 6px 16px rgba(15,23,42,.06);
+    }
+    .user{
+      margin-left:auto;
+      background:#eef6ff;
+      border-bottom-right-radius:6px;
+    }
+    .assistant{
+      margin-right:auto;
+      border-bottom-left-radius:6px;
+    }
+
+    .bubble.rejected{
+      background: var(--dangerBg);
+      border-color: var(--dangerBorder);
+    }
+    .rejectTitle{
+      color: var(--danger);
+      font-weight: 800;
+      margin-bottom: 6px;
+      display:block;
+    }
+
+    .composer{
+      padding:12px;
+      border-top:1px solid var(--border);
+      background:#fff;
+    }
+    .row{
+      display:flex;
+      gap:10px;
+      align-items:flex-end;
+    }
+    textarea{
+      flex:1;
+      resize:vertical;
+      min-height:44px;
+      max-height:140px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      outline:none;
+      font-size:15px;
+    }
+    textarea:focus{border-color:rgba(47,91,231,.6); box-shadow:0 0 0 3px rgba(47,91,231,.12)}
+    .send{
+      width:46px;height:46px;
+      border:none;
+      border-radius:14px;
+      background:var(--brand);
+      color:#fff;
+      cursor:pointer;
+      font-size:18px;
+    }
+    .hint{
+      margin-top:8px;
+      font-size:12px;
+      color:var(--muted);
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    code{
+      background:#f1f5f9;
+      padding:2px 6px;
+      border-radius:8px;
+      border:1px solid #e2e8f0;
+    }
+
+    @media (max-width: 900px){
+      .layout{ grid-template-columns: 1fr; }
+      .chat{ height:auto; min-height: 70vh; }
+      .messages{ min-height: 52vh; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">F5 AI Guardrail Lab</div>
+
+  <div class="wrap">
+    <div class="crumb">Home &nbsp;›&nbsp; Assistant</div>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="sidebarHeader">Departments</div>
+        <div class="nav">
+          <button class="navBtn active" data-dept="HR" id="btnHR">👤 HR</button>
+          <button class="navBtn" data-dept="Finance" id="btnFinance">💲 Finance</button>
+          <button class="navBtn" data-dept="Engineering" id="btnEng">🛠️ Engineering</button>
+        </div>
+      </aside>
+
+      <section class="card">
+        <div class="cardHeader">
+          <div>
+            <div class="titleRow">
+              <div class="dot"></div>
+              <div class="title">
+                <span id="chatTitle">HR Assistant</span>
+                <span class="badge">Live</span>
+              </div>
+            </div>
+            <div class="sub">James Labs Chatbot · Connected to Backend LLM</div>
+          </div>
+          <div class="toolbar">
+            <button id="btnClear">Clear</button>
+          </div>
+        </div>
+
+        <div class="chat">
+          <div id="messages" class="messages">
+            <div class="bubble assistant">Hi there! How can I help?</div>
+          </div>
+
+          <div class="composer">
+            <div class="row">
+              <textarea id="input" placeholder="Type your question"></textarea>
+              <button id="btnSend" class="send" title="Send">➤</button>
+            </div>
+            <div class="hint">
+              <span>Enter to send · Shift+Enter new line</span>
+              <span>Endpoint: <code>/api/chat</code></span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+<script>
+  const messagesEl = document.getElementById("messages");
+  const inputEl = document.getElementById("input");
+  const btnSend = document.getElementById("btnSend");
+  const btnClear = document.getElementById("btnClear");
+  const chatTitleEl = document.getElementById("chatTitle");
+  const navButtons = Array.from(document.querySelectorAll(".navBtn"));
+
+  let activeDept = "HR";
+  let isSending = false;
+
+  function setActiveDept(dept){
+    activeDept = dept;
+    chatTitleEl.textContent = dept + " Assistant";
+    navButtons.forEach(b => b.classList.toggle("active", b.dataset.dept === dept));
+    messagesEl.innerHTML = "";
+    addBubble("assistant", `Hi! You're chatting with the ${dept} Assistant. How can I help?`);
+  }
+
+  navButtons.forEach(btn => {
+    btn.addEventListener("click", () => setActiveDept(btn.dataset.dept));
+  });
+
+  function addBubble(role, text, extraClass=""){
+    const div = document.createElement("div");
+    div.className = "bubble " + role + (extraClass ? (" " + extraClass) : "");
+    div.textContent = text;
+    messagesEl.appendChild(div);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+    return div;
+  }
+
+  function escapeHtml(s){
+    return String(s)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function isRejected(text){
+    const t = (text || "").trim();
+    return t.startsWith("Prompt Rejected") || t.startsWith("Response Rejected");
+  }
+
+  function renderRejectedBubble(el, fullText){
+    const safe = escapeHtml(fullText);
+    const parts = safe.split("\n");
+    const title = parts.shift() || "";
+    const body = parts.join("\n").trim();
+
+    el.classList.add("rejected");
+    el.innerHTML =
+      `<span class="rejectTitle">${title}</span>` +
+      (body ? `<div>${body.replaceAll("\n","<br/>")}</div>` : "");
+  }
+
+  function dedupeTrailingToken(text){
+    const t = (text || "").replace(/\s+$/,""); // trim end
+    if (!t) return t;
+
+    const lines = t.split("\n");
+    if (lines.length >= 2){
+      const last = lines[lines.length - 1].trim();
+      const prev = lines[lines.length - 2].trim();
+      if (last && last === prev){
+        lines.pop();
+        return lines.join("\n").replace(/\s+$/,"");
+      }
+    }
+
+    const m = t.match(/(.+?)([\s]+)(\S+)\2\3$/);
+    if (m){
+      return (m[1] + m[2] + m[3]).replace(/\s+$/,"");
+    }
+
+    return t;
+  }
+
+  async function typeIntoBubble(el, fullText, speedMs = 12){
+    // Hard reset to avoid any leftover characters
+    el.textContent = "";
+    const text = String(fullText || "");
+
+    for (let i = 0; i < text.length; i++){
+      el.textContent += text[i];
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+      await new Promise(r => setTimeout(r, speedMs));
+    }
+  }
+
+  async function send(){
+    if (isSending) return;
+
+    const msg = inputEl.value.trim();
+    if(!msg) return;
+
+    isSending = true;
+    btnSend.disabled = true;
+    inputEl.disabled = true;
+
+    addBubble("user", msg);
+    inputEl.value = "";
+
+    const assistantBubble = addBubble("assistant", "…");
+
+    try{
+      const res = await fetch("/api/chat", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ message: msg, dept: activeDept })
+      });
+
+      const data = await res.json();
+
+      if(!res.ok){
+        assistantBubble.textContent = "" + (data.error || ("HTTP " + res.status));
+        return;
+      }
+
+      let reply = data.reply || "(empty reply)";
+      reply = dedupeTrailingToken(reply);
+
+      if (isRejected(reply)){
+        renderRejectedBubble(assistantBubble, reply);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+        return;
+      }
+
+      await typeIntoBubble(assistantBubble, reply, 10);
+
+    }catch(e){
+      assistantBubble.textContent = "Failed to reach backend: " + e.message;
+    } finally {
+      isSending = false;
+      btnSend.disabled = false;
+      inputEl.disabled = false;
+      inputEl.focus();
+    }
+  }
+
+  btnSend.addEventListener("click", send);
+  btnClear.addEventListener("click", () => {
+    messagesEl.innerHTML = "";
+    addBubble("assistant","Hi there! How can I help?");
+  });
+
+  inputEl.addEventListener("keydown", (e) => {
+    if(e.key === "Enter" && !e.shiftKey){
+      e.preventDefault();
+      send();
+    }
+  });
+</script>
+</body>
+</html>
