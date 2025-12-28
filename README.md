@@ -64,8 +64,38 @@ vim .env
 ## 5. Start the Service
 ```
 ./run.sh
-
-# Stop the service
-./stop.sh
 ```
+
+## 6. Register the application as a system service
+```
+sudo vim /etc/systemd/system/ai-guardrail-case01.service
+```
+
+Paste the following:
+```
+[Unit]
+Description=F5 AI Guardrail Case01 Demo App
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/chatapp
+EnvironmentFile=/opt/chatapp/.env
+ExecStart=/bin/bash -lc '/opt/chatapp/run.sh'
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Enable and start:
+```
+sudo systemctl daemon-reload
+sudo systemctl enable ai-guardrail-case01
+sudo systemctl start ai-guardrail-case01
+```
+
 
